@@ -1,24 +1,12 @@
-"use client";
-
-import { Mail, Lock, User } from "lucide-react";
+import { Mail, Lock } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
-import bg from "../../public/bg-2.png";
-import logo from "../../public/logo.png";
-import google from "../../public/google.svg";
-import github from "../../public/github.svg";
+import React from "react";
+import bg from "../public/bg3.png";
+import logo from "../public/logo.png";
+import google from "../public/google.svg";
+import github from "../public/github.svg";
 
-const Signup = () => {
-
-  const [user, setUser] = useState({
-    fullname:"",
-    email:"",
-    password:""
-  })
-
-  const handleInputChange = () => {
-
-  }
+const Login = () => {
   return (
     <div
       style={{
@@ -43,21 +31,10 @@ const Signup = () => {
             <div className="rounded px-4 py-2 shadow bg-[#90a5ef]">
               <Image src={logo} alt="bg" width={100} height={100} />
             </div>
+            <div className="text-slate-900 font-medium text-xl py-5">
+              Hello! Welcome Back
+            </div>
             <form className="w-full px-5 py-6 space-y-6">
-            <div className="flex flex-col w-full lg:px-5">
-                <label className="text-sm">Fullname</label>
-                <div className="bg-white flex justify-start items-start py-3 px-4 rounded text-slate-600 text-lg mt-1">
-                  <User className="w-7 h-7 text-[#A1BDFD]" />
-                  <input
-                    type={"text"}
-                    placeholder="John Doe"
-                    name="fullname"
-                    className="outline-none w-full px-4"
-                    value={user.fullname}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
               <div className="flex flex-col w-full lg:px-5">
                 <label className="text-sm">Email</label>
                 <div className="bg-white flex justify-start items-start py-3 px-4 rounded text-slate-600 text-lg mt-1">
@@ -84,7 +61,7 @@ const Signup = () => {
                 <div className="flex justify-between items-center w-full"></div>
                 <div className="grid place-items-center w-full mx-auto pt-7">
                   <button className="bg-[#5D7DF3] text-white text-lg w-full px-8 py-3 rounded-md uppercase font-semibold">
-                  Register
+                    Login
                   </button>
                 </div>
                 <div className="flex justify-center w-full items-center gap-3 py-3">
@@ -101,8 +78,8 @@ const Signup = () => {
                   </div>
                 </div>
                 <div className="text-lg text-slate-900 font-medium">
-                  <span>Have an account?</span>
-                  <a href="/" className="text-[#5D7DF3] pl-3 hover:underline">Login</a>
+                  <span>Don't have an account?</span>
+                  <a href="/signup" className="text-[#5D7DF3] pl-3 hover:underline">Create an account</a>
                 </div>
               </div>
             </form>
@@ -113,4 +90,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;
