@@ -1,12 +1,60 @@
+"use client";
+
 import { Mail, Lock } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import bg from "../public/bg3.png";
 import logo from "../public/logo.png";
 import google from "../public/google.svg";
 import github from "../public/github.svg";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [error, setError] = useState("");
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  });
+  const handleInputChange = (event: any) => {
+    const { name, value } = event.target;
+    return setUser((prevInfo) => ({ ...prevInfo, [name]: value }));
+  };
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    console.log(user);
+    try {
+      if (!user.email || !user.password) {
+        setError("please fill all the fields");
+        return;
+      }
+      const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+      if (!emailRegex.test(user.email)) {
+        setError("invalid email id");
+        return;
+      }
+      const res = await axios.post("/api/login", user);
+      console.log(res.data);
+      if (res.status == 200) {
+        console.log("login successful");
+        setError("");
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.log(error);
+      setError("");
+    } finally {
+      setLoading(false);
+
+      setUser({
+        email: "",
+        password: "",
+      });
+    }
+  };
   return (
     <div
       style={{
@@ -34,7 +82,10 @@ const Login = () => {
             <div className="text-slate-900 font-medium text-xl py-5">
               Hello! Welcome Back
             </div>
-            <form className="w-full px-5 py-6 space-y-6">
+            <form
+              className="w-full px-5 py-6 space-y-6"
+              onSubmit={handleSubmit}
+            >
               <div className="flex flex-col w-full lg:px-5">
                 <label className="text-sm">Email</label>
                 <div className="bg-white flex justify-start items-start py-3 px-4 rounded text-slate-600 text-lg mt-1">
@@ -44,6 +95,8 @@ const Login = () => {
                     placeholder="example@123.com"
                     name="email"
                     className="outline-none w-full px-4"
+                    value={user.email}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
@@ -56,12 +109,18 @@ const Login = () => {
                     placeholder="**********"
                     name="password"
                     className="outline-none w-full px-4"
+                    value={user.password}
+                    onChange={handleInputChange}
                   />
                 </div>
-                <div className="flex justify-between items-center w-full"></div>
+
                 <div className="grid place-items-center w-full mx-auto pt-7">
-                  <button className="bg-[#5D7DF3] text-white text-lg w-full px-8 py-3 rounded-md uppercase font-semibold">
-                    Login
+                  {error && <p className="py-6 text-lg">{error}</p>}
+                  <button
+                    type="submit"
+                    className="bg-[#5D7DF3] text-white text-lg w-full px-8 py-3 rounded-md uppercase font-semibold"
+                  >
+                    {loading ? "Processing" : "Login"}
                   </button>
                 </div>
                 <div className="flex justify-center w-full items-center gap-3 py-3">
@@ -79,7 +138,12 @@ const Login = () => {
                 </div>
                 <div className="text-lg text-slate-900 font-medium">
                   <span>Don't have an account?</span>
-                  <a href="/signup" className="text-[#5D7DF3] pl-3 hover:underline">Create an account</a>
+                  <a
+                    href="/signup"
+                    className="text-[#5D7DF3] pl-3 hover:underline"
+                  >
+                    Create an account
+                  </a>
                 </div>
               </div>
             </form>
