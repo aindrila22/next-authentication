@@ -5,10 +5,9 @@ import Image from "next/image";
 import React, { useState } from "react";
 import bg from "../public/bg3.png";
 import logo from "../public/logo.png";
-import google from "../public/google.svg";
-import github from "../public/github.svg";
+import google from "../public/google2.svg";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import { signIn } from "next-auth/react";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -25,7 +24,7 @@ const Login = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
-    console.log(user);
+    console.log(user.email, user.password);
     try {
       if (!user.email || !user.password) {
         setError("please fill all the fields");
@@ -36,13 +35,21 @@ const Login = () => {
         setError("invalid email id");
         return;
       }
-      const res = await axios.post("/api/login", user);
-      console.log(res.data);
-      if (res.status == 200) {
-        console.log("login successful");
-        setError("");
-        router.push("/dashboard");
+      //const res = await axios.post("/api/login", user);
+      // console.log(res.data);
+      const res = await signIn("credentials", {
+        email: user.email,
+        password: user.password,
+        redirect: false,
+      });
+      console.log(res);
+      if (res?.error) {
+        setError("error");
+        return;
       }
+
+      setError("");
+      router.push("/dashboard");
     } catch (error) {
       console.log(error);
       setError("");
@@ -56,10 +63,9 @@ const Login = () => {
     }
   };
   return (
-    <div
+    <div className="min-h-screen"
       style={{
         backgroundImage: `url("/background.png")`,
-        height: "100vh",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
       }}
@@ -129,12 +135,9 @@ const Login = () => {
                   <div className="border-b border-gray-800 py-2 w-full px-6" />
                 </div>
                 <div className="flex justify-center items-center w-full gap-8 pb-8">
-                  <div className="rounded px-4 py-2 shadow bg-white ">
-                    <Image src={google} alt="bg" width={30} height={30} />
+                <div onClick={()=>signIn("google")} className="rounded px-6 py-2 shadow cursor-pointer bg-gray-50 grid place-items-center mx-auto mb-4">
+                    <Image src={google} alt="bg" width={100} height={100} />
                   </div>{" "}
-                  <div className="rounded px-4 py-2 shadow bg-white ">
-                    <Image src={github} alt="bg" width={30} height={30} />
-                  </div>
                 </div>
                 <div className="text-lg text-slate-900 font-medium">
                   <span>Don't have an account?</span>

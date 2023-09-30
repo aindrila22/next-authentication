@@ -1,19 +1,34 @@
 "use client";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+
 import React from "react";
+import { signOut, useSession } from "next-auth/react";
 
 const Dashboard = () => {
-  const router = useRouter();
-  const logout = async () => {
-    await axios.get("/api/logout");
-    console.log("logout successfully");
-    router.push("/");
-  };
+  const { data: session } = useSession();
+  console.log(session);
+
   return (
-    <div className="w-full min-h-screen grid place-items-center mx-auto">
-      Dashboard
-      <button onClick={logout} className="bg-slate-950 text-white rounded text-lg w-auto px-6 py-3">Logout</button>
+    <div className="min-h-screen py-20"
+      style={{
+        backgroundImage: `url("/background.png")`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
+    >
+      <div className="w-full max-w-2xl grid place-items-center mx-auto py-40 gap-6 bg-slate-50">
+        <span className="text-4xl tracking-wide font-semibold capitalize text-[#5D7DF3]">
+          welcome to the Dashboard
+        </span>
+        {session && (
+          <span className="text-2xl tracking-normal py-10 font-semibold">{session.user.name}</span>
+        )}
+        <button
+          onClick={() => signOut()}
+          className="bg-slate-950 text-white rounded text-lg w-auto px-6 py-3 uppercase"
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 };

@@ -5,17 +5,17 @@ import Image from "next/image";
 import React, { useState } from "react";
 import bg from "../../public/bg-2.png";
 import logo from "../../public/logo.png";
-import google from "../../public/google.svg";
-import github from "../../public/github.svg";
+import google from "../../public/google2.svg";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 const Signup = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [error, setError] = useState("");
   const [user, setUser] = useState({
-    fullname: "",
+    name: "",
     email: "",
     password: "",
   });
@@ -29,7 +29,7 @@ const Signup = () => {
     setLoading(true);
     console.log(user);
     try {
-      if (!user.fullname || !user.email || !user.password) {
+      if (!user.name || !user.email || !user.password) {
         setError("please fill all the fields");
         return;
       }
@@ -52,17 +52,16 @@ const Signup = () => {
       setLoading(false);
 
       setUser({
-        fullname: "",
+        name: "",
         email: "",
         password: "",
       });
     }
   };
   return (
-    <div
+    <div className="min-h-screen"
       style={{
         backgroundImage: `url("/background.png")`,
-        height: "100vh",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
       }}
@@ -93,9 +92,9 @@ const Signup = () => {
                   <input
                     type={"text"}
                     placeholder="John Doe"
-                    name="fullname"
+                    name="name"
                     className="outline-none w-full px-4"
-                    value={user.fullname}
+                    value={user.name}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -142,14 +141,11 @@ const Signup = () => {
                   <div className="mt-3">or</div>
                   <div className="border-b border-gray-800 py-2 w-full px-6" />
                 </div>
-                <div className="flex justify-center items-center w-full gap-8 pb-8">
-                  <div className="rounded px-4 py-2 shadow bg-white ">
-                    <Image src={google} alt="bg" width={30} height={30} />
+
+                  <div onClick={()=>signIn("google")} className="rounded px-6 py-2 shadow cursor-pointer bg-gray-50 grid place-items-center mx-auto mb-8">
+                    <Image src={google} alt="bg" width={100} height={100} />
                   </div>{" "}
-                  <div className="rounded px-4 py-2 shadow bg-white ">
-                    <Image src={github} alt="bg" width={30} height={30} />
-                  </div>
-                </div>
+
                 <div className="text-lg text-slate-900 font-medium">
                   <span>Have an account?</span>
                   <a href="/" className="text-[#5D7DF3] pl-3 hover:underline">
